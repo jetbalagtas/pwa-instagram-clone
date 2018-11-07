@@ -1,6 +1,6 @@
 {
   "name": "PWA Instagram Clone",
-  "short_name": "PWAgram",
+  "short_name": "PWAGram",
   "icons": [
     {
       "src": "/src/images/icons/app-icon-48x48.png",
