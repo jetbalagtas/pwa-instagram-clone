@@ -1,0 +1,20 @@
+{
+  "name": "pwa-instagram-clone",
+  "version": "1.0.0",
+  "description": "A simple Instagram clone.",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server -c-1"
+  },
+  "keywords": [
+    "pwa",
+    "progressive",
+    "web",
+    "app"
+  ],
+  "author": "Jet Balagtas",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^0.10.0"
+  }
+}
