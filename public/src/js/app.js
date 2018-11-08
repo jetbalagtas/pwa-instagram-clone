@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+var deferredPrompt;
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .register('/sw.js')
@@ -5,3 +8,10 @@ if ('serviceWorker' in navigator) {
       console.log('Service worker registered.');
     });
 }
+
+window.addEventListener('beforeinstallprompt', function(event) {
+  console.log('beforeinstallprompt fired.');
+  event.preventDefault();
+  deferredPrompt = event;
+  return false;
+});
