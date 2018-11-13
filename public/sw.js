@@ -4,7 +4,9 @@ self.addEventListener('install', function(event) {
     caches.open('static')
     .then(cache => {
       console.log('[Service Worker] Pre-caching App Shell...');
-      cache.add('/src/js/app.js')
+      cache.add('/');
+      cache.add('/index.html');
+      cache.add('/src/js/app.js');
     })
   );
 });
