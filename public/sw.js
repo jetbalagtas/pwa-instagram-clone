@@ -42,8 +42,8 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
+  
   var url = 'https://httpbin.org/get';
-
   if (event.request.url.indexOf(url) > -1) {
     event.respondWith(
       caches.open(CACHE_DYNAMIC_NAME)
@@ -67,8 +67,11 @@ self.addEventListener('fetch', function(event) {
             return res;
           }))
           .catch(err => caches.open(CACHE_STATIC_NAME)
-          .then(cache => cache.match('/offline.html'))
-          );
+          .then(cache => {
+            if (event.request.url.indexOf('/help')) {
+              return cache.match('/offline.html');
+            }
+          }));
         }
       })
     );
