@@ -1,4 +1,4 @@
-var CACHE_STATIC_NAME = 'static-v12';
+var CACHE_STATIC_NAME = 'static-v13';
 var CACHE_DYNAMIC_NAME = 'dynamic-v2';
 
 self.addEventListener('install', function(event) {
@@ -41,6 +41,17 @@ self.addEventListener('activate', function(event) {
   return self.clients.claim();
 });
 
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.open(CACHE_DYNAMIC_NAME)
+    .then(cache => fetch(event.request)
+    .then(res => {
+      cache.put(event.request, res.clone());
+      return res;
+    }))
+  );
+});
+
 // self.addEventListener('fetch', function(event) {
 //   event.respondWith(
 //     caches.match(event.request)
@@ -62,14 +73,15 @@ self.addEventListener('activate', function(event) {
 //   );
 // });
 
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    fetch(event.request)
-    .then(res => caches.open(CACHE_DYNAMIC_NAME)
-    .then(cache => {
-      cache.put(event.request.url, res.clone())
-      return res;
-    }))
-    .catch(err => caches.match(event.request))
-  );
-});
+// Network first strategy
+// self.addEventListener('fetch', function(event) {
+//   event.respondWith(
+//     fetch(event.request)
+//     .then(res => caches.open(CACHE_DYNAMIC_NAME)
+//     .then(cache => {
+//       cache.put(event.request.url, res.clone())
+//       return res;
+//     }))
+//     .catch(err => caches.match(event.request))
+//   );
+// });
