@@ -42,14 +42,37 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.open(CACHE_DYNAMIC_NAME)
-    .then(cache => fetch(event.request)
-    .then(res => {
-      cache.put(event.request, res.clone());
-      return res;
-    }))
-  );
+  var url = 'https://httpbin.org/get';
+
+  if (event.request.url.indexOf(url) > -1) {
+    event.respondWith(
+      caches.open(CACHE_DYNAMIC_NAME)
+      .then(cache => fetch(event.request)
+      .then(res => {
+        cache.put(event.request, res.clone());
+        return res;
+      }))
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request)
+      .then(response => {
+        if (response) {
+          return response;
+        } else {
+          return fetch(event.request)
+          .then(res => caches.open(CACHE_DYNAMIC_NAME)
+          .then(cache => {
+            cache.put(event.request.url, res.clone())
+            return res;
+          }))
+          .catch(err => caches.open(CACHE_STATIC_NAME)
+          .then(cache => cache.match('/offline.html'))
+          );
+        }
+      })
+    );
+  }
 });
 
 // self.addEventListener('fetch', function(event) {
