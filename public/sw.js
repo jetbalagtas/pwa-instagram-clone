@@ -42,7 +42,15 @@ self.addEventListener('activate', function(event) {
   return self.clients.claim();
 });
 
-const isInCache = (requestURL, cacheArr) => cacheArr.some(url => url === requestURL.replace(self.origin, ''));
+const isInArray = (string, array) => {
+  let cachePath;
+  if (string.indexOf(self.origin) === 0) {
+    cachePath = string.substring(self.origin.length);
+  } else {
+    cachePath = string;
+  }
+  return array.indexOf(cachePath) > -1;
+}
 
 self.addEventListener('fetch', function(event) {
   const url = 'https://httpbin.org/get';
@@ -55,7 +63,7 @@ self.addEventListener('fetch', function(event) {
         return res;
       }))
     );
-  } else if (isInCache(event.request.url, STATIC_FILES)) {
+  } else if (isInArray(event.request.url, STATIC_FILES)) {
     event.respondWith(caches.match(event.request));
   } else {
     event.respondWith(
