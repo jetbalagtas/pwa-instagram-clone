@@ -1,5 +1,21 @@
-var CACHE_STATIC_NAME = 'static-v13';
-var CACHE_DYNAMIC_NAME = 'dynamic-v2';
+const CACHE_STATIC_NAME = 'static-v13';
+const CACHE_DYNAMIC_NAME = 'dynamic-v2';
+const STATIC_FILES = [
+  '/',
+  '/index.html',
+  '/offline.html',
+  '/src/js/app.js',
+  '/src/js/feed.js',
+  '/src/js/promise.js',
+  '/src/js/fetch.js',
+  '/src/js/material.min.js',
+  '/src/css/app.css',
+  '/src/css/feed.css',
+  '/src/images/main-image.jpg',
+  'https://fonts.googleapis.com/css?family=Roboto:400,700',
+  'https://fonts.googleapis.com/icon?family=Material+Icons',
+  'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css'
+];
 
 self.addEventListener('install', function(event) {
   console.log('[Service Worker] Installing Service Worker...', event);
@@ -7,22 +23,7 @@ self.addEventListener('install', function(event) {
     caches.open(CACHE_STATIC_NAME)
     .then(cache => {
       console.log('[Service Worker] Pre-caching App Shell...');
-      cache.addAll([
-        '/',
-        '/index.html',
-        '/offline.html',
-        '/src/js/app.js',
-        '/src/js/feed.js',
-        '/src/js/promise.js',
-        '/src/js/fetch.js',
-        '/src/js/material.min.js',
-        '/src/css/app.css',
-        '/src/css/feed.css',
-        '/src/images/main-image.jpg',
-        'https://fonts.googleapis.com/css?family=Roboto:400,700',
-        'https://fonts.googleapis.com/icon?family=Material+Icons',
-        'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css'
-      ]);
+      cache.addAll(STATIC_FILES);
     })
   );
 });
@@ -41,9 +42,10 @@ self.addEventListener('activate', function(event) {
   return self.clients.claim();
 });
 
+const isInCache = (requestURL, cacheArr) => cacheArr.some(url => url === requestURL.replace(self.origin, ''));
+
 self.addEventListener('fetch', function(event) {
-  
-  var url = 'https://httpbin.org/get';
+  const url = 'https://httpbin.org/get';
   if (event.request.url.indexOf(url) > -1) {
     event.respondWith(
       caches.open(CACHE_DYNAMIC_NAME)
@@ -53,6 +55,8 @@ self.addEventListener('fetch', function(event) {
         return res;
       }))
     );
+  } else if (isInCache(event.request.url, STATIC_FILES)) {
+    event.respondWith(caches.match(event.request));
   } else {
     event.respondWith(
       caches.match(event.request)
@@ -109,5 +113,19 @@ self.addEventListener('fetch', function(event) {
 //       return res;
 //     }))
 //     .catch(err => caches.match(event.request))
+//   );
+// });
+
+// Cache-only strategy
+// self.addEventListener('fetch', function(event) {
+//   event.respondWith(
+//     caches.match(event.request)
+//   );
+// });
+
+// Network-only strategy
+// self.addEventListener('fetch', function(event) {
+//   event.respondWith(
+//     fetch(event.request)
 //   );
 // });
