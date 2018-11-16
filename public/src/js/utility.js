@@ -8,7 +8,7 @@ const dbPromise = idb.open('posts-store', 1, function(db) {
 const writeData = (st, data) => dbPromise
   .then(db => {
     const tx = db.transaction(st, 'readwrite');
-    const store = tx.objectStore('posts');
+    const store = tx.objectStore(st);
     store.put(data);
     return tx.complete;
   });
