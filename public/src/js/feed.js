@@ -21,6 +21,16 @@ function openCreatePostModal() {
 
     deferredPrompt = null;
   }
+
+  // Example of how to unregister/remove a serviceWorker
+  // if ('serviceWorker' in navigator) {
+  //   navigator.serviceWorker.getRegistrations()
+  //   .then(registrations => {
+  //     for (var i = 0; i < registrations.length; i++) {
+  //       registrations[i].unregister();
+  //     }
+  //   });
+  // }
 }
 
 function closeCreatePostModal() {
