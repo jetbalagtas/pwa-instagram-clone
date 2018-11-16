@@ -1,4 +1,6 @@
-const CACHE_STATIC_NAME = 'static-v14';
+importScripts('/src/js/idb.js');
+
+const CACHE_STATIC_NAME = 'static-v15';
 const CACHE_DYNAMIC_NAME = 'dynamic-v2';
 const STATIC_FILES = [
   '/',
@@ -6,6 +8,7 @@ const STATIC_FILES = [
   '/offline.html',
   '/src/js/app.js',
   '/src/js/feed.js',
+  '/src/js/idb.js',
   '/src/js/promise.js',
   '/src/js/fetch.js',
   '/src/js/material.min.js',
@@ -16,6 +19,12 @@ const STATIC_FILES = [
   'https://fonts.googleapis.com/icon?family=Material+Icons',
   'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css'
 ];
+
+const dbPromise = idb.open('posts-store', 1, function(db) {
+  if (!db.objectStoreNames.contains('posts')) {
+    db.createObjectStore('posts', { keyPath: 'id' });
+  }
+})
 
 // const trimCache = (cacheName, maxItems) => {
 //   caches.open(cacheName)
@@ -66,14 +75,23 @@ const isInArray = (string, array) => {
 self.addEventListener('fetch', function(event) {
   const url = 'https://pwa-instagram-clone.firebaseio.com/posts';
   if (event.request.url.indexOf(url) > -1) {
-    event.respondWith(
-      caches.open(CACHE_DYNAMIC_NAME)
-      .then(cache => fetch(event.request)
+    event.respondWith(fetch(event.request)
       .then(res => {
-        // trimCache(CACHE_DYNAMIC_NAME, 3);
-        cache.put(event.request, res.clone());
+        const clonedRes = res.clone();
+        clonedRes.json()
+        .then(data => {
+          for (const key in data) {
+            dbPromise
+            .then(db => {
+              const tx = db.transaction('posts', 'readwrite');
+              const store = tx.objectStore('posts');
+              store.put(data[key]);
+              return tx.complete;
+            });
+          }
+        });
         return res;
-      }))
+      })
     );
   } else if (isInArray(event.request.url, STATIC_FILES)) {
     event.respondWith(caches.match(event.request));
