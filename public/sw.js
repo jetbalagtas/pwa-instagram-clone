@@ -64,7 +64,7 @@ const isInArray = (string, array) => {
 }
 
 self.addEventListener('fetch', function(event) {
-  const url = 'https://httpbin.org/get';
+  const url = 'https://pwa-instagram-clone.firebaseio.com/posts';
   if (event.request.url.indexOf(url) > -1) {
     event.respondWith(
       caches.open(CACHE_DYNAMIC_NAME)

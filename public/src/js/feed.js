@@ -1,8 +1,8 @@
 /* eslint-disable require-jsdoc */
-var shareImageButton = document.querySelector('#share-image-button');
-var createPostArea = document.querySelector('#create-post');
-var closeCreatePostModalButton = document.querySelector('#close-create-post-modal-btn');
-var sharedMomentsArea = document.querySelector('#shared-moments');
+const shareImageButton = document.querySelector('#share-image-button');
+const createPostArea = document.querySelector('#create-post');
+const closeCreatePostModalButton = document.querySelector('#close-create-post-modal-btn');
+const sharedMomentsArea = document.querySelector('#shared-moments');
 
 function openCreatePostModal() {
   createPostArea.style.display = 'block';
@@ -26,7 +26,7 @@ function openCreatePostModal() {
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.getRegistrations()
   //   .then(registrations => {
-  //     for (var i = 0; i < registrations.length; i++) {
+  //     for (let i = 0; i < registrations.length; i++) {
   //       registrations[i].unregister();
   //     }
   //   });
@@ -42,7 +42,7 @@ shareImageButton.addEventListener('click', openCreatePostModal);
 closeCreatePostModalButton.addEventListener('click', closeCreatePostModal);
 
 // Currently not in use. Allows to save assets to cache on demand otherwise.
-function onSaveButtonClicked(event) {
+const onSaveButtonClicked = (event) => {
   console.log('clicked');
   if ('caches' in window) {
     caches.open('user-requested')
@@ -53,31 +53,31 @@ function onSaveButtonClicked(event) {
   }
 }
 
-function clearCards() {
+const clearCards = () => {
   while (sharedMomentsArea.hasChildNodes()) {
     sharedMomentsArea.removeChild(sharedMomentsArea.lastChild);
   }
 }
 
-function createCard() {
-  var cardWrapper = document.createElement('div');
+const createCard = (data) => {
+  const cardWrapper = document.createElement('div');
   cardWrapper.className = 'shared-moment-card mdl-card mdl-shadow--2dp';
-  var cardTitle = document.createElement('div');
+  const cardTitle = document.createElement('div');
   cardTitle.className = 'mdl-card__title';
-  cardTitle.style.backgroundImage = 'url("/src/images/sf-boat.jpg")';
+  cardTitle.style.backgroundImage = 'url(' + data.image + ')';
   cardTitle.style.backgroundSize = 'cover';
   cardTitle.style.height = '180px';
   cardWrapper.appendChild(cardTitle);
-  var cardTitleTextElement = document.createElement('h2');
+  const cardTitleTextElement = document.createElement('h2');
   cardTitleTextElement.style.color = 'white';
   cardTitleTextElement.className = 'mdl-card__title-text';
-  cardTitleTextElement.textContent = 'San Francisco Trip';
+  cardTitleTextElement.textContent = data.title;
   cardTitle.appendChild(cardTitleTextElement);
-  var cardSupportingText = document.createElement('div');
+  const cardSupportingText = document.createElement('div');
   cardSupportingText.className = 'mdl-card__supporting-text';
-  cardSupportingText.textContent = 'In San Francisco';
+  cardSupportingText.textContent = data.location;
   cardSupportingText.style.textAlign = 'center';
-  // var cardSaveButton = document.createElement('button');
+  // const cardSaveButton = document.createElement('button');
   // cardSaveButton.textContent = 'Save';
   // cardSaveButton.addEventListener('click', onSaveButtonClicked);
   // cardSupportingText.appendChild(cardSaveButton);
@@ -86,16 +86,26 @@ function createCard() {
   sharedMomentsArea.appendChild(cardWrapper);
 }
 
-var url = 'https://httpbin.org/get';
-var networkDataReceived = false;
+const updateUI = (data => {
+  clearCards();
+  for (let i = 0; i < data.length; i++) {
+    createCard(data[i])
+  }
+});
+
+const url = 'https://pwa-instagram-clone.firebaseio.com/posts.json';
+let networkDataReceived = false;
 
 fetch(url)
 .then(res => res.json())
 .then(data => {
   networkDataReceived = true;
   console.log('From web: ', data);
-  clearCards();
-  createCard();
+  const dataArray = [];
+  for (const key in data) {
+    dataArray.push(data[key]);
+  }
+  updateUI(dataArray);
 });
 
 if ('caches' in window) {
@@ -108,8 +118,11 @@ if ('caches' in window) {
   .then(data => {
     console.log('From cache: ', data);
     if (!networkDataReceived) {
-      clearCards();
-      createCard();
+      const dataArray = [];
+      for (const key in data) {
+        dataArray.push(data[key]);
+      }
+      updateUI(dataArray)
     }
   })
 }
