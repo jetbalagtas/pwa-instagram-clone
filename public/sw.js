@@ -80,7 +80,7 @@ self.addEventListener('fetch', function(event) {
           }))
           .catch(err => caches.open(CACHE_STATIC_NAME)
           .then(cache => {
-            if (event.request.url.indexOf('/help')) {
+            if (event.request.headers.get('accept').includes('text/html')) {
               return cache.match('/offline.html');
             }
           }));
