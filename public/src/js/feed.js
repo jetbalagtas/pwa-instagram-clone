@@ -45,16 +45,16 @@ shareImageButton.addEventListener('click', openCreatePostModal);
 closeCreatePostModalButton.addEventListener('click', closeCreatePostModal);
 
 // Currently not in use. Allows to save assets to cache on demand otherwise.
-const onSaveButtonClicked = (event) => {
-  console.log('clicked');
-  if ('caches' in window) {
-    caches.open('user-requested')
-    .then(cache => {
-      cache.add('https://httpbin.org/get');
-      cache.add('/src/images/sf-boat.jpg');
-    });
-  }
-}
+// const onSaveButtonClicked = (event) => {
+//   console.log('clicked');
+//   if ('caches' in window) {
+//     caches.open('user-requested')
+//     .then(cache => {
+//       cache.add('https://httpbin.org/get');
+//       cache.add('/src/images/sf-boat.jpg');
+//     });
+//   }
+// }
 
 const clearCards = () => {
   while (sharedMomentsArea.hasChildNodes()) {
@@ -121,6 +121,24 @@ if ('indexedDB' in window) {
   });
 }
 
+const sendData = () => {
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      id: new Date().toISOString(),
+      title: titleInput.value,
+      location: locationInput.value,
+      image: 'https://firebasestorage.googleapis.com/v0/b/pwa-instagram-clone.appspot.com/o/sf-boat.jpg?alt=media&token=1314ccfb-8292-4304-a6c4-f61ea8768ddc'
+    })
+  })
+  .then(res => console.log('Sent data', res));
+  updateUI();
+}
+
 form.addEventListener('submit', (event) => {
   event.preventDefault();
 
@@ -148,5 +166,7 @@ form.addEventListener('submit', (event) => {
       })
       .catch(err => console.log(err));
     });
+  } else {
+    sendData();
   }
 });
