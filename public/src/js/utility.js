@@ -20,10 +20,23 @@ const readAllData = (st => dbPromise
     return store.getAll();
   }));
 
-  const clearAllData = (st => dbPromise
-    .then(db => {
-      const tx = db.transaction(st, 'readwrite');
-      const store = tx.objectStore(st);
-      store.clear();
-      return tx.complete;
-    }))
+const clearAllData = (st => dbPromise
+  .then(db => {
+    const tx = db.transaction(st, 'readwrite');
+    const store = tx.objectStore(st);
+    store.clear();
+    return tx.complete;
+  }));
+
+const deleteItemFromData = ((st, id) => {
+  dbPromise
+  .then(db => {
+    const tx = db.transaction(st, 'readwrite');
+    const store = tx.objectStore(st);
+    store.delete(id);
+    return tx.complete;
+  })
+  .then(() => {
+    console.log('Item deleted.');
+  });
+});
