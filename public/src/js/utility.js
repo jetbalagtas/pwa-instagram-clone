@@ -13,22 +13,22 @@ const writeData = (st, data) => dbPromise
     return tx.complete;
   });
 
-const readAllData = (st => dbPromise
+const readAllData = (st) => dbPromise
   .then(db => {
     const tx = db.transaction(st, 'readonly');
     const store = tx.objectStore(st);
     return store.getAll();
-  }));
+  });
 
-const clearAllData = (st => dbPromise
+const clearAllData = (st) => dbPromise
   .then(db => {
     const tx = db.transaction(st, 'readwrite');
     const store = tx.objectStore(st);
     store.clear();
     return tx.complete;
-  }));
+  });
 
-const deleteItemFromData = ((st, id) => {
+const deleteItemFromData = (st, id) => {
   dbPromise
   .then(db => {
     const tx = db.transaction(st, 'readwrite');
@@ -39,4 +39,4 @@ const deleteItemFromData = ((st, id) => {
   .then(() => {
     console.log('Item deleted.');
   });
-});
+};
