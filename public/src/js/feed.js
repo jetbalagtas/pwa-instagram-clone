@@ -66,7 +66,7 @@ const createCard = (data) => {
   cardTitle.className = 'mdl-card__title';
   cardTitle.style.backgroundImage = 'url(' + data.image + ')';
   cardTitle.style.backgroundSize = 'cover';
-  cardTitle.style.height = '180px';
+  cardTitle.style.backgroundPosition = 'center';
   cardWrapper.appendChild(cardTitle);
   const cardTitleTextElement = document.createElement('h2');
   cardTitleTextElement.style.color = 'white';
