@@ -158,7 +158,7 @@ form.addEventListener('submit', (event) => {
         location: locationInput.value
       };
       writeData('sync-posts', post)
-      .then(() => sw.sync.register('sync-new-post'))
+      .then(() => sw.sync.register('sync-new-posts'))
       .then(() => {
         const snackbarContainer = document.querySelector('#confirmation-toast');
         const data = { message: 'Your post was saved for syncing!' };
