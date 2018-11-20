@@ -24,15 +24,20 @@ window.addEventListener('beforeinstallprompt', function(event) {
   return false;
 });
 
+const displayConfirmationNotification = () => {
+  const options = {
+    body: 'You successfully subscribed to notifications!'
+  };
+  new Notification('PWAGram: Success!', options);
+}
+
 const askForNotificationPermission = () => {
   Notification.requestPermission(result => {
     console.log('Notification permission', result);
     if (result != 'granted') {
       console.log('No notification permission granted.');
     } else {
-      for (let i = 0; i < enableNotificationsButtons.length; i ++) {
-        enableNotificationsButtons[i].style.display = 'none';
-      }
+      displayConfirmationNotification();
     }
   });
 }
