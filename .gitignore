@@ -1,3 +1,9 @@
 node_modules
 .DS_Store
 .vscode/
+
+# firebase deployment
+.firebase/
+.firebaserc
+firebase.json
+functions/pwa-instagram-clone-firebase-key.json

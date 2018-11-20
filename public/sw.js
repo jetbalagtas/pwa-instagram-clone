@@ -1,7 +1,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-const CACHE_STATIC_NAME = 'static-v22';
+const CACHE_STATIC_NAME = 'static-v23';
 const CACHE_DYNAMIC_NAME = 'dynamic-v2';
 const STATIC_FILES = [
   '/',
@@ -167,7 +167,7 @@ self.addEventListener('sync', function(event) {
      readAllData('sync-posts')
      .then(data => {
        for (const dt of data) {
-         fetch('https://pwa-instagram-clone.firebaseio.com/posts.json', {
+         fetch('https://us-central1-pwa-instagram-clone.cloudfunctions.net/storePostData', {
            method: 'POST',
            headers: {
              'Content-Type': 'application/json',
@@ -183,10 +183,11 @@ self.addEventListener('sync', function(event) {
          .then(res => {
            console.log('Sent data', res);
            if (res.ok) {
-            deleteItemFromData('sync-posts', dt.id);
-          }
+             res.json()
+             .then(resData => deleteItemFromData('sync-posts', resData.id));
+           }
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log('Error while sending data.', err));
        }
      })  
    );

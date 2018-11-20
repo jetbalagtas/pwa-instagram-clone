@@ -122,7 +122,7 @@ if ('indexedDB' in window) {
 }
 
 const sendData = () => {
-  fetch(url, {
+  fetch('https://us-central1-pwa-instagram-clone.cloudfunctions.net/storePostData', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
