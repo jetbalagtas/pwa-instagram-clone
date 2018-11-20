@@ -25,10 +25,13 @@ window.addEventListener('beforeinstallprompt', function(event) {
 });
 
 const displayConfirmationNotification = () => {
-  const options = {
-    body: 'You successfully subscribed to notifications!'
-  };
-  new Notification('PWAGram: Success!', options);
+  if ('serviceWorker' in navigator) {
+    const options = {
+      body: 'You successfully subscribed to notifications!'
+    };
+    navigator.serviceWorker.ready
+    .then(swreg => swreg.showNotification('PWAGram: Success!', options))
+  }
 }
 
 const askForNotificationPermission = () => {
