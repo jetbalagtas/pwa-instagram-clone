@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-var deferredPrompt;
+let deferredPrompt;
+const enableNotificationsButtons = document.querySelectorAll('.enable-notifications');
 
 if (!window.Promise) {
   window.Promise = Promise;
@@ -22,3 +23,23 @@ window.addEventListener('beforeinstallprompt', function(event) {
   deferredPrompt = event;
   return false;
 });
+
+const askForNotificationPermission = () => {
+  Notification.requestPermission(result => {
+    console.log('Notification permission', result);
+    if (result != 'granted') {
+      console.log('No notification permission granted.');
+    } else {
+      for (let i = 0; i < enableNotificationsButtons.length; i ++) {
+        enableNotificationsButtons[i].style.display = 'none';
+      }
+    }
+  });
+}
+
+if ('Notification' in window) {
+  for (let i = 0; i < enableNotificationsButtons.length; i ++) {
+    enableNotificationsButtons[i].style.display = 'inline-block';
+    enableNotificationsButtons[i].addEventListener('click', askForNotificationPermission);
+  }
+}
