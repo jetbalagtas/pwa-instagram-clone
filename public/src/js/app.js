@@ -46,18 +46,33 @@ const displayConfirmationNotification = () => {
   }
 }
 
+const configurePushSub = () => {
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.ready
+  .then(swreg => swreg.pushManager.getSubscription()
+  .then(sub => {
+    if (sub === null) {
+      // create a new subscription
+      
+    } else {
+      // use existing subscription
+    }
+  }))
+}
+
 const askForNotificationPermission = () => {
   Notification.requestPermission(result => {
     console.log('Notification permission', result);
     if (result != 'granted') {
       console.log('No notification permission granted.');
     } else {
-      displayConfirmationNotification();
+      configurePushSub();
+      // displayConfirmationNotification();
     }
   });
 }
 
-if ('Notification' in window) {
+if ('Notification' in window && 'serviceWorker' in navigator) {
   for (let i = 0; i < enableNotificationsButtons.length; i ++) {
     enableNotificationsButtons[i].style.display = 'inline-block';
     enableNotificationsButtons[i].addEventListener('click', askForNotificationPermission);
