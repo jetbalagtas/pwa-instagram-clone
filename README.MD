@@ -24,3 +24,10 @@ After Firebase initialization, navigate to the functions folder installed by Fir
 
 Follow these instructions to create and deploy your cloud functions:
     https://firebase.google.com/docs/functions/write-firebase-functions
+
+## Securing Push Messages
+You'll need to use the [VAPID protocol](https://blog.mozilla.org/services/2016/04/04/using-vapid-with-webpush/). Start by installing the ```web-push``` third party package to your backend. While in the ```functions``` folder, run:
+
+        npm install --save web-push
+Then:
+        npm run web-push generate-vapid-keys

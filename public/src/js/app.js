@@ -57,13 +57,30 @@ const configurePushSub = () => {
   .then(sub => {
     if (sub === null) {
       // create a new subscription
-      reg.pushManager.subscribe({
-        userVisibleOnly: true
+      const vapidPublicKey = 'BIH_gXww3ZWVsr-GObFSJSBJyP7MetEQaTEadfkc_5iosLQkp4culaU34UOZLkRAcehGEi8szSP0deU_WAwH17E';
+      const convertedPublicKey = urlBase64ToUint8Array(vapidPublicKey);
+      return reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: convertedPublicKey
       });
     } else {
-      // use existing subscription
+      // We have an existing subscription
     }
   })
+  .then(newSub => fetch('https://pwa-instagram-clone.firebaseio.com/subscriptions.json', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(newSub)
+    }))
+    .then(res => {
+      if (res.ok) {
+        displayConfirmationNotification();
+      }
+    })
+    .catch(err => console.log(err));
 }
 
 const askForNotificationPermission = () => {
