@@ -48,16 +48,22 @@ const displayConfirmationNotification = () => {
 
 const configurePushSub = () => {
   if (!('serviceWorker' in navigator)) return;
+  let reg;
   navigator.serviceWorker.ready
-  .then(swreg => swreg.pushManager.getSubscription()
+  .then(swreg => {
+    reg = swreg;
+    return swreg.pushManager.getSubscription();
+  })
   .then(sub => {
     if (sub === null) {
       // create a new subscription
-      
+      reg.pushManager.subscribe({
+        userVisibleOnly: true
+      });
     } else {
       // use existing subscription
     }
-  }))
+  })
 }
 
 const askForNotificationPermission = () => {
