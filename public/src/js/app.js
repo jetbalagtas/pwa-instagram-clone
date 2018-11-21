@@ -27,7 +27,13 @@ window.addEventListener('beforeinstallprompt', function(event) {
 const displayConfirmationNotification = () => {
   if ('serviceWorker' in navigator) {
     const options = {
-      body: 'You successfully subscribed to notifications!'
+      body: 'You successfully subscribed to notifications!',
+      icon: '/src/images/icons/app-icon-96x96.png',
+      image: '/src/images/sf-boat.jpg',
+      dir: 'ltr',
+      lang: 'en-US', // BCP 47
+      vibrate: [100, 50, 200],
+      badge: '/src/images/icons/app-icon-96x96.png'
     };
     navigator.serviceWorker.ready
     .then(swreg => swreg.showNotification('PWAGram: Success!', options))
