@@ -7,3 +7,4 @@ node_modules
 .firebaserc
 firebase.json
 functions/pwa-instagram-clone-firebase-key.json
+functions/vapidkeys.json
