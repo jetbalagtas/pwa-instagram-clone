@@ -6,13 +6,23 @@ const sharedMomentsArea = document.querySelector('#shared-moments');
 const form = document.querySelector('form');
 const titleInput = document.querySelector('#title');
 const locationInput = document.querySelector('#location');
+const videoPlayer = document.querySelector('#player');
+const canvasElement = document.querySelector('#canvas');
+const captureButton = document.querySelector('#capture-btn');
+const imagePicker = document.querySelector('#image-picker');
+const imagePickerArea = document.querySelector('#pick-image');
 
-function openCreatePostModal() {
-  createPostArea.style.transform = 'translateY(0)'
+const initializeMedia = () => {
+
+}
+
+const openCreatePostModal = () => {
+  createPostArea.style.transform = 'translateY(0)';
+  initializeMedia();
   if (deferredPrompt) {
     deferredPrompt.prompt();
 
-    deferredPrompt.userChoice.then(function(choiceResult) {
+    deferredPrompt.userChoice.then(choiceResult => {
       console.log(choiceResult.outcome);
       
       if (choiceResult.outcome === 'dismissed') {
@@ -36,7 +46,7 @@ function openCreatePostModal() {
   // }
 }
 
-function closeCreatePostModal() {
+const closeCreatePostModal = () => {
   createPostArea.style.transform = 'translateY(100vh)'
 }
 
