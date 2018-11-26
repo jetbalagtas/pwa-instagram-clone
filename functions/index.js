@@ -38,7 +38,11 @@ exports.storePostData = functions.https.onRequest((request, response) => {
        };
 
        // eslint-disable-next-line promise/no-nesting
-       webpush.sendNotification(pushConfig, JSON.stringify({title: 'New Post', content: 'New Post Added!'}))
+       webpush.sendNotification(pushConfig, JSON.stringify({
+         title: 'New Post',
+         content: 'New Post Added!',
+         openUrl: '/help'
+        }))
        .catch(err => console.log(err));
      });
      return response.status(201).json({message: 'Data stored.', id: request.body.id});
