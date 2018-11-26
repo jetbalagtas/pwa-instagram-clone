@@ -41,6 +41,15 @@ const initializeMedia = () => {
   });
 }
 
+captureButton.addEventListener('click', (event) => {
+  canvasElement.style.display = 'block';
+  videoPlayer.style.display = 'none';
+  captureButton.style.display = 'none';
+  const context = canvasElement.getContext('2d');
+  context.drawImage(videoPlayer, 0, 0, canvas.width, videoPlayer.videoHeight / (videoPlayer.videoWidth / canvas.width));
+  videoPlayer.srcObject.getVideoTracks().forEach(track => track.stop());
+});
+
 const openCreatePostModal = () => {
   createPostArea.style.transform = 'translateY(0)';
   initializeMedia();
