@@ -167,18 +167,15 @@ self.addEventListener('sync', function(event) {
      readAllData('sync-posts')
      .then(data => {
        for (const dt of data) {
+         const postData = new FormData();
+         postData.append('id', dt.id);
+         postData.append('title', dt.title);
+         postData.append('location', dt.location);
+         postData.append('file', dt.picture, dt.id + '.png');
+         
          fetch('https://us-central1-pwa-instagram-clone.cloudfunctions.net/storePostData', {
            method: 'POST',
-           headers: {
-             'Content-Type': 'application/json',
-             'Accept': 'application/json'
-           },
-           body: JSON.stringify({
-             id: dt.id,
-             title: dt.title,
-             location: dt.location,
-             image: 'https://firebasestorage.googleapis.com/v0/b/pwa-instagram-clone.appspot.com/o/sf-boat.jpg?alt=media&token=1314ccfb-8292-4304-a6c4-f61ea8768ddc'
-           })
+           body: postData
          })
          .then(res => {
            console.log('Sent data', res);

@@ -11,6 +11,7 @@ const canvasElement = document.querySelector('#canvas');
 const captureButton = document.querySelector('#capture-btn');
 const imagePicker = document.querySelector('#image-picker');
 const imagePickerArea = document.querySelector('#pick-image');
+let picture;
 
 const initializeMedia = () => {
   if (!('mediaDevices' in navigator)) {
@@ -48,6 +49,7 @@ captureButton.addEventListener('click', (event) => {
   const context = canvasElement.getContext('2d');
   context.drawImage(videoPlayer, 0, 0, canvas.width, videoPlayer.videoHeight / (videoPlayer.videoWidth / canvas.width));
   videoPlayer.srcObject.getVideoTracks().forEach(track => track.stop());
+  picture = dataURItoBlob(canvasElement.toDataURL());
 });
 
 const openCreatePostModal = () => {
@@ -169,18 +171,16 @@ if ('indexedDB' in window) {
 }
 
 const sendData = () => {
+  const postData = new FormData();
+  const id = new Date().toISOString();
+  postData.append('id', id);
+  postData.append('title', titleInput.value);
+  postData.append('location', locationInput.value);
+  postData.append('file', picture, id + '.png');
+
   fetch('https://us-central1-pwa-instagram-clone.cloudfunctions.net/storePostData', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify({
-      id: new Date().toISOString(),
-      title: titleInput.value,
-      location: locationInput.value,
-      image: 'https://firebasestorage.googleapis.com/v0/b/pwa-instagram-clone.appspot.com/o/sf-boat.jpg?alt=media&token=1314ccfb-8292-4304-a6c4-f61ea8768ddc'
-    })
+    body: postData
   })
   .then(res => console.log('Sent data', res));
   updateUI();
@@ -202,7 +202,8 @@ form.addEventListener('submit', (event) => {
       const post = {
         id: new Date().toISOString(),
         title: titleInput.value,
-        location: locationInput.value
+        location: locationInput.value,
+        picture: picture
       };
       writeData('sync-posts', post)
       .then(() => sw.sync.register('sync-new-posts'))
