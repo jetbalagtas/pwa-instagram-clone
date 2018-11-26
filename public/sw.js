@@ -204,8 +204,20 @@ self.addEventListener('notificationclick', function(event) {
     console.log('Confirm was chosen.');
   } else {
     console.log(action);
+    event.waitUntil(
+      clients.matchAll()
+      .then(clis => {
+        const client = clis.find(c => c.visibilityState === 'visible');
+        if (client !== undefined) {
+          client.navigate('http://localhost:8080');
+          client.focus();
+        } else {
+          clients.openWindow('http://localhost:8080');
+        }
+        notification.close();
+      })
+    );
   }
-  notification.close();
 });
 
 self.addEventListener('notificationclose', function(event) {
