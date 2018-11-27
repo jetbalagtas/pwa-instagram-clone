@@ -43,10 +43,10 @@ exports.storePostData = functions.https.onRequest((request, response) => {
       );
       const filepath = path.join(os.tmpdir(), filename);
       upload = { file: filepath, type: mimetype };
-      file.pipe(fs.createReadStream(filepath));
+      file.pipe(fs.createWriteStream(filepath));
     });
 
-    // This will invoked on every field detected
+    // This will be invoked on every field detected
     busboy.on('field', (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) => {
       fields[fieldname] = val;
     });
@@ -60,7 +60,7 @@ exports.storePostData = functions.https.onRequest((request, response) => {
           uploadType: 'media',
           metadata: {
             metadata: {
-              contentType: files.file.type,
+              contentType: upload.type,
               firebaseStorageDownloadTokens: uuid
             }
           }
