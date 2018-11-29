@@ -14,12 +14,14 @@ const imagePickerArea = document.querySelector('#pick-image');
 let picture;
 const locationBtn = document.querySelector('#location-btn');
 const locationLoader = document.querySelector('#location-loader');
-let fetchedLocation;
+let fetchedLocation = { lat: 0, lng: 0 };
 
 locationBtn.addEventListener('click', (event) => {
   if (!('geolocation' in navigator)) {
     locationBtn.style.display = 'none';
   }
+
+  let alertShown = false;
 
   locationBtn.style.display = 'none';
   locationLoader.style.display = 'block';
@@ -36,8 +38,11 @@ locationBtn.addEventListener('click', (event) => {
       console.log(err);
       locationBtn.style.display = 'inline';
       locationLoader.style.display = 'none';
-      alert('Couldn\'t fetch location, please enter manually.');
-      fetchedLocation = { lat: null, lng: null };
+      if (!alertShown) {
+        alert('Couldn\'t fetch location, please enter manually.');
+        alertShown = true;
+      }
+      fetchedLocation = { lat: 0, lng: 0 };
     },
     { timeout: 7000 }
   );
@@ -93,7 +98,9 @@ imagePicker.addEventListener('change', (event) => {
 });
 
 const openCreatePostModal = () => {
-  createPostArea.style.transform = 'translateY(0)';
+  setTimeout(() => {
+    createPostArea.style.transform = 'translateY(0)';
+  }, 1);
   initializeMedia();
   initializeLocation();
   if (deferredPrompt) {
@@ -124,12 +131,18 @@ const openCreatePostModal = () => {
 }
 
 const closeCreatePostModal = () => {
-  createPostArea.style.transform = 'translateY(100vh)';
   imagePickerArea.style.display = 'none';
   videoPlayer.style.display = 'none';
   canvasElement.style.display = 'none';
   locationBtn.style.display = 'inline';
   locationLoader.style.display = 'none';
+  captureButton.style.display = 'inline';
+  if (videoPlayer.srcObject) {
+    videoPlayer.srcObject.getVideoTracks().forEach(track => track.stop());
+  }
+  setTimeout(() => {
+    createPostArea.style.transform = 'translateY(100vh)';
+  }, 1);
 }
 
 shareImageButton.addEventListener('click', openCreatePostModal);
@@ -219,9 +232,9 @@ const sendData = () => {
   postData.append('id', id);
   postData.append('title', titleInput.value);
   postData.append('location', locationInput.value);
-  postData.append('file', picture, id + '.png');
   postData.append('rawLocationLat', fetchedLocation.lat);
   postData.append('rawLocationLng', fetchedLocation.lng);
+  postData.append('file', picture, id + '.png');
 
   fetch('https://us-central1-pwa-instagram-clone.cloudfunctions.net/storePostData', {
     method: 'POST',
