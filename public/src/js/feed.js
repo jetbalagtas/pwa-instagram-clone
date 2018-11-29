@@ -12,6 +12,42 @@ const captureButton = document.querySelector('#capture-btn');
 const imagePicker = document.querySelector('#image-picker');
 const imagePickerArea = document.querySelector('#pick-image');
 let picture;
+const locationBtn = document.querySelector('#location-btn');
+const locationLoader = document.querySelector('#location-loader');
+let fetchedLocation;
+
+locationBtn.addEventListener('click', (event) => {
+  if (!('geolocation' in navigator)) {
+    locationBtn.style.display = 'none';
+  }
+
+  locationBtn.style.display = 'none';
+  locationLoader.style.display = 'block';
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      locationBtn.style.display = 'inline';
+      locationLoader.style.display = 'none';
+      fetchedLocation = { lat: position.coords.latitude, lng: 0 };
+      locationInput.value = 'In Summerville';
+      document.querySelector('#manual-location').classList.add('is-focused');
+    },
+    (err) => {
+      console.log(err);
+      locationBtn.style.display = 'inline';
+      locationLoader.style.display = 'none';
+      alert('Couldn\'t fetch location, please enter manually.');
+      fetchedLocation = { lat: null, lng: null };
+    },
+    { timeout: 7000 }
+  );
+});
+
+const initializeLocation = () => {
+  if (!('geolocation' in navigator)) {
+    locationBtn.style.display = 'none';
+  }
+}
 
 const initializeMedia = () => {
   if (!('mediaDevices' in navigator)) {
@@ -59,6 +95,7 @@ imagePicker.addEventListener('change', (event) => {
 const openCreatePostModal = () => {
   createPostArea.style.transform = 'translateY(0)';
   initializeMedia();
+  initializeLocation();
   if (deferredPrompt) {
     deferredPrompt.prompt();
 
@@ -91,6 +128,8 @@ const closeCreatePostModal = () => {
   imagePickerArea.style.display = 'none';
   videoPlayer.style.display = 'none';
   canvasElement.style.display = 'none';
+  locationBtn.style.display = 'inline';
+  locationLoader.style.display = 'none';
 }
 
 shareImageButton.addEventListener('click', openCreatePostModal);
@@ -181,6 +220,8 @@ const sendData = () => {
   postData.append('title', titleInput.value);
   postData.append('location', locationInput.value);
   postData.append('file', picture, id + '.png');
+  postData.append('rawLocationLat', fetchedLocation.lat);
+  postData.append('rawLocationLng', fetchedLocation.lng);
 
   fetch('https://us-central1-pwa-instagram-clone.cloudfunctions.net/storePostData', {
     method: 'POST',
@@ -207,7 +248,8 @@ form.addEventListener('submit', (event) => {
         id: new Date().toISOString(),
         title: titleInput.value,
         location: locationInput.value,
-        picture: picture
+        picture: picture,
+        rawLocation: fetchedLocation
       };
       writeData('sync-posts', post)
       .then(() => sw.sync.register('sync-new-posts'))
