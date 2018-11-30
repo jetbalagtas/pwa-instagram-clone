@@ -36,6 +36,24 @@ workbox.routing.registerRoute('https://pwa-instagram-clone.firebaseio.com/posts.
     return res;
   }));
 
+workbox.routing.registerRoute(routeData => routeData.event.request.headers
+  .get('accept').includes('text/html'),
+  (args) => caches.match(args.event.request)
+  .then(response => {
+    if (response) {
+      return response;
+    } else {
+      return fetch(args.event.request)
+      .then(res => caches.open('dynamic')
+      .then(cache => {
+        cache.put(args.event.request.url, res.clone())
+        return res;
+      }))
+      .catch(err => caches.match('/offline.html')
+      .then(res => res));
+    }
+  }));
+
 workbox.precaching.precacheAndRoute([
   {
     "url": "404.html",
@@ -99,7 +117,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "sw-base.js",
-    "revision": "9cfe4c2017047bcd622318bfde7ff2c2"
+    "revision": "8a4b04b30fd78709fabbbc7ebf4a8871"
   },
   {
     "url": "sw.js",

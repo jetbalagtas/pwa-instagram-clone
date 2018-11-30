@@ -36,4 +36,22 @@ workbox.routing.registerRoute('https://pwa-instagram-clone.firebaseio.com/posts.
     return res;
   }));
 
+workbox.routing.registerRoute(routeData => routeData.event.request.headers
+  .get('accept').includes('text/html'),
+  (args) => caches.match(args.event.request)
+  .then(response => {
+    if (response) {
+      return response;
+    } else {
+      return fetch(args.event.request)
+      .then(res => caches.open('dynamic')
+      .then(cache => {
+        cache.put(args.event.request.url, res.clone())
+        return res;
+      }))
+      .catch(err => caches.match('/offline.html')
+      .then(res => res));
+    }
+  }));
+
 workbox.precaching.precacheAndRoute([]);
