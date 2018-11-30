@@ -59,10 +59,10 @@ Setup the CLI to work with the project by running the wizard:
 
     workbox wizard
 
-Generate a Service Worker:
+Generate a Service Worker for the first time:
 
     workbox generateSW workbox-config.js
 
-I've included that last command above in the ```package.json``` scripts, so whenever we update our site/app, we just run this instead:
+We are customizing the Service Worker. Hence, the ```workbox injectManifest``` is included in the ```package.json``` scripts. So whenever we update our site/app, we just run this instead:
 
     npm run generate-sw
