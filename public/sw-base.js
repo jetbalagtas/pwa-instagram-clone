@@ -1,5 +1,7 @@
 /* eslint-disable quotes */
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js');
+importScripts('/src/js/idb.js');
+importScripts('/src/js/utility.js');
 
 workbox.precaching.suppressWarnings();
 
@@ -20,5 +22,18 @@ workbox.routing.registerRoute(/.*(?:googleapis|gstatic)\.com.*$/, workbox.strate
 workbox.routing.registerRoute('https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css', workbox.strategies.staleWhileRevalidate({
   cacheName: 'material-css'
 }));
+
+workbox.routing.registerRoute('https://pwa-instagram-clone.firebaseio.com/posts.json', (args) => fetch(args.event.request)
+  .then(res => {
+    const clonedRes = res.clone();
+    clearAllData('posts')
+    .then(() => clonedRes.json()
+    .then(data => {
+      for (const key in data) {
+        writeData('posts', data[key]);
+      }
+    }));
+    return res;
+  }));
 
 workbox.precaching.precacheAndRoute([]);
