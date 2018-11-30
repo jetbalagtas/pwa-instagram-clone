@@ -49,3 +49,20 @@ Firebase parses the request body for us and turns it into a Buffer. Hence we nee
 We will have to generate a public access URL for the file. Firebase uses a ```firebaseStorageDownloadTokens``` file metadata property that takes a unique string. It is also this unique string that Firebase needs attached to the end of the image URL. So while in the ```functions``` folder, install the ```uuid-v4``` package:
 
     npm install --save uuid-v4
+
+# Automatic Service Worker Management with Workbox
+To simplify service worker management, we can use Workbox by Google. More at: [Workbox](https://developers.google.com/web/tools/workbox/). We use the generic approach and install the Workbox CLI:
+
+    npm install --save-dev workbox-cli
+
+Setup the CLI to work with the project by running the wizard:
+
+    workbox wizard
+
+Generate a Service Worker:
+
+    workbox generateSW workbox-config.js
+
+I've included the that last command above in the ```package.json``` scripts, so whenever we update our site/app, we just run this instead:
+
+    npm run generate-sw
