@@ -63,6 +63,6 @@ Generate a Service Worker:
 
     workbox generateSW workbox-config.js
 
-I've included the that last command above in the ```package.json``` scripts, so whenever we update our site/app, we just run this instead:
+I've included that last command above in the ```package.json``` scripts, so whenever we update our site/app, we just run this instead:
 
     npm run generate-sw
