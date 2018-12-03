@@ -65,7 +65,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "83bd00e8352c68fdd86bf4fcb882cf56"
+    "revision": "8609f52bdd12e2d22b445f8ceb320ecf"
   },
   {
     "url": "manifest.json",
@@ -88,42 +88,6 @@ workbox.precaching.precacheAndRoute([
     "revision": "1c6d81b27c9d423bece9869b07a7bd73"
   },
   {
-    "url": "src/js/app.js",
-    "revision": "ea798032aefb4f148ebbb1f23f5e9041"
-  },
-  {
-    "url": "src/js/feed.js",
-    "revision": "736c44590cbb4462f9768f7620382402"
-  },
-  {
-    "url": "src/js/fetch.js",
-    "revision": "28d0b3f7194cb2f8c8258e8defb31349"
-  },
-  {
-    "url": "src/js/idb.js",
-    "revision": "044976e13e918fd8d4d74364bd92f861"
-  },
-  {
-    "url": "src/js/material.min.js",
-    "revision": "713af0c6ce93dbbce2f00bf0a98d0541"
-  },
-  {
-    "url": "src/js/promise.js",
-    "revision": "004d53512554ecef425a7a02d4c528d6"
-  },
-  {
-    "url": "src/js/utility.js",
-    "revision": "aba87d974483e024ef3f05ab4cc5f471"
-  },
-  {
-    "url": "sw-base.js",
-    "revision": "57352fb75d736e5376f0acd2ea67009b"
-  },
-  {
-    "url": "sw.js",
-    "revision": "05f2b12306f0fa28627758b1b164e362"
-  },
-  {
     "url": "src/images/main-image-lg.jpg",
     "revision": "31b19bffae4ea13ca0f2178ddb639403"
   },
@@ -138,6 +102,34 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "src/images/sf-boat.jpg",
     "revision": "0f282d64b0fb306daf12050e812d6a19"
+  },
+  {
+    "url": "src/js/app.min.js",
+    "revision": "27c44f0a5abe81df3ba59231fb75da51"
+  },
+  {
+    "url": "src/js/feed.min.js",
+    "revision": "a874b4abe9d523871cac92a7c0fa2346"
+  },
+  {
+    "url": "src/js/fetch.min.js",
+    "revision": "32590119a06bf9ade8026dd12baa695e"
+  },
+  {
+    "url": "src/js/idb.min.js",
+    "revision": "ea82c8cec7e6574ed535bee7878216e0"
+  },
+  {
+    "url": "src/js/material.min.js",
+    "revision": "713af0c6ce93dbbce2f00bf0a98d0541"
+  },
+  {
+    "url": "src/js/promise.min.js",
+    "revision": "7be19d2e97926f498f2668e055e26b22"
+  },
+  {
+    "url": "src/js/utility.min.js",
+    "revision": "141b203dea94b103f6500786d689bc26"
   }
 ]);
 
