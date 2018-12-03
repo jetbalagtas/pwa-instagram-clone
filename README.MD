@@ -63,6 +63,6 @@ Generate a Service Worker for the first time:
 
     workbox generateSW workbox-config.js
 
-We are customizing the Service Worker. Hence, the ```workbox injectManifest``` is included in the ```package.json``` scripts. So whenever we update our site/app, we just run this instead:
+We customize the generated Service Worker based on our needs. Hence, the ```workbox injectManifest``` is included in the ```package.json``` scripts. So whenever we update our site/app, we just run this instead:
 
     npm run generate-sw
